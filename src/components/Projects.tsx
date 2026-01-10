@@ -1,5 +1,5 @@
-
 import React, { useState, useRef, MouseEvent } from 'react';
+import { motion } from 'framer-motion';
 import GridBackground from './GridBackground';
 
 interface Project {
@@ -13,35 +13,40 @@ interface Project {
 
 const projects: Project[] = [
   {
-    title: "Nova Dashboard",
-    description: "A real-time financial analytics platform with interactive 3D visualizations.",
-    tech: ["Next.js", "MongoDB", "Tailwind"],
-    liveLink: "#",
-    githubLink: "#",
-    image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=800"
+    title: "Trelix (Current Best)",
+    description:
+      "Trelix is a modern, feature-rich task management application built with Next.js, designed to help teams collaborate and manage their work efficiently.",
+    tech: ["Next.js", "TypeScript", "Tailwind", "MongoDB"],
+    liveLink: "https://trelix-delta.vercel.app",
+    githubLink: "https://github.com/Pujan1306/trelix",
+    image: "/trelix.png",
   },
   {
-    title: "EcoSphere AI",
-    description: "Machine learning driven supply chain optimizer for sustainable businesses.",
-    tech: ["Next.js", "MongoDB", "Tailwind"],
-    liveLink: "#",
-    githubLink: "#",
-    image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=800"
+    title: "Codexa",
+    description:
+      "A full-stack application for real-time code collaboration, featuring chat, video calls, and code execution capabilities.",
+    tech: ["React", "Node.js", "Express.js", "MongoDB"],
+    liveLink: "https://codexa-frontend-8xj5.onrender.com",
+    githubLink: "https://github.com/Pujan1306/Codexa",
+    image: "/codexa.png",
   },
   {
-    title: "Krypton Wallet",
-    description: "Next-gen decentralized multi-sig wallet with biometric authentication.",
-    tech: ["Next.js", "MongoDB", "Tailwind"],
-    liveLink: "#",
-    githubLink: "#",
-    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800"
-  }
+    title: "Secretly",
+    description:
+      "Secretly is a modern web application built with Next.js that allows users to send and receive anonymous messages.",
+    tech: ["Next.js", "TypeScript", "Tailwind", "MongoDB"],
+    liveLink: "https://secretly-sooty.vercel.app",
+    githubLink: "https://github.com/Pujan1306/secretly",
+    image: "/secretly.png",
+  },
 ];
 
-const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
+const ProjectCard: React.FC<{ project: Project; index: number }> = ({
+  project,
+  index,
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!cardRef.current) return;
@@ -52,95 +57,150 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     });
   };
 
+  const handleCardClick = () => {
+    window.open(project.liveLink, "_blank");
+  };
+
   return (
-    <div 
+    <motion.div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="group relative flex flex-col bg-[#0a0a0a] border border-white/[0.03] rounded-[2rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/20 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.9)]"
+      onClick={handleCardClick}
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+      className="group relative flex flex-col cursor-pointer bg-(--card)/40 hover:bg-(--card)/90 backdrop-blur-sm border border-border rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/40 hover:-translate-y-2 shadow-sm hover:shadow-2xl"
     >
-      <div 
-        className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-30"
+   
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-30 opacity-0 group-hover:opacity-100"
         style={{
-          opacity: isHovered ? 1 : 0,
-          background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(16, 185, 129, 0.04), transparent 70%)`
+          background: `radial-gradient(
+            600px circle at ${mousePos.x}px ${mousePos.y}px,
+            oklch(from var(--primary) l c h / 0.12),
+            transparent 80%
+          )`,
         }}
       />
 
-      <div className="relative aspect-[16/10] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent z-10 opacity-95" />
-        <img 
-          src={project.image} 
+    
+      <div className="relative aspect-16/10 overflow-hidden bg-muted">
+        <div className="absolute inset-0 bg-linear-to-t from-card via-transparent to-transparent z-10 opacity-40" />
+        <motion.img
+          src={project.image}
           alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale-[40%] group-hover:grayscale-0"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="w-full h-full object-cover"
         />
+      </div>
+
+   
+      <div className="p-8 md:p-10 flex flex-col grow relative z-20">
+        <div className="mb-6">
+          <h4 className="text-2xl md:text-3xl font-bold mb-3 tracking-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+            {project.title}
+          </h4>
+
+          <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed font-medium">
+            {project.description}
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-1">
+            {project.tech.map((t, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 bg-(--background)/80 border border-border rounded-full text-[8px] font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+
+    
+        <div className="mt-auto pt-6 flex items-center justify-between border-t border-border">
         
-        <div className="absolute top-5 left-5 z-20 flex flex-wrap gap-2">
-          {project.tech.map((t, i) => (
-            <span key={i} className="px-3 py-1 bg-black/80 backdrop-blur-md border border-white/10 rounded-full text-[8px] font-black tracking-widest text-emerald-400 uppercase">
-              {t}
-            </span>
-          ))}
-        </div>
-      </div>
+          <motion.a
+            href={project.liveLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            whileHover={{ x: 5 }}
+            className="flex items-center gap-2.5 text-[10px] font-black tracking-[0.2em] uppercase hover:text-emerald-600 transition-all"
+          >
+            <span>Preview</span>
+            <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center">
+              <svg
+                className="w-3.5 h-3.5 -rotate-45"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </div>
+          </motion.a>
 
-      <div className="p-8 flex flex-col flex-grow relative z-20">
-        <h4 className="text-2xl font-bold mb-3 tracking-tight group-hover:text-emerald-400 transition-colors">
-          {project.title}
-        </h4>
-        <p className="text-sm text-gray-400 leading-relaxed mb-8">
-          {project.description}
-        </p>
-
-        <div className="mt-auto flex items-center gap-6">
-          <a href={project.liveLink} className="group/link flex items-center gap-2 text-[10px] font-black tracking-widest uppercase text-white transition-all">
-            <span>Live Demo</span>
-            <svg className="w-4 h-4 transition-transform group-hover/link:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
+        
+          <motion.a
+            href={project.githubLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            className="p-3 text-muted-foreground hover:text-foreground"
+          >
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
             </svg>
-          </a>
+          </motion.a>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
 const Projects: React.FC = () => {
   return (
-    <section id="portfolio" className="relative py-40 px-6 bg-[#050505] overflow-hidden">
-      {/* High-visibility uniform grid */}
-      <GridBackground opacity={0.5} size={50} />
+    <section
+      id="portfolio"
+      className="relative py-24 md:py-48 px-6 bg-background overflow-hidden"
+    >
+      <GridBackground opacity={0.2} size={50} />
 
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent" />
-      
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="mb-24 text-center">
-          <div className="inline-block px-5 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-500 text-[10px] font-black tracking-[0.4em] uppercase mb-8">
-            Portfolio
-          </div>
-          <h3 className="text-6xl md:text-8xl font-bold tracking-tighter leading-none mb-6">
-            Crafting Digital <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">Experiences</span>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-24 text-center"
+        >
+          <h3 className="text-[clamp(2.5rem,8vw,6rem)] font-black tracking-tighter">
+            PROJECT EXPERIENCE
           </h3>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {projects.map((project, idx) => (
-            <ProjectCard key={idx} project={project} />
+            <ProjectCard key={idx} project={project} index={idx} />
           ))}
-        </div>
-
-        <div className="mt-28 text-center">
-          <button className="group relative px-12 py-6 bg-transparent text-white font-black tracking-[0.25em] uppercase text-[11px] rounded-xl border border-white/10 hover:border-emerald-500 transition-all duration-500 overflow-hidden">
-            <span className="relative z-10">Explore All</span>
-            <div className="absolute inset-0 bg-emerald-500 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-            <span className="absolute inset-0 flex items-center justify-center text-black z-20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 font-black">
-              Explore All
-            </span>
-          </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
