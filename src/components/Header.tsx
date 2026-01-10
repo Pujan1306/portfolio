@@ -4,6 +4,15 @@ import { AnimatedThemeToggler } from './ui/animated-theme-toggler';
 const Header: React.FC = () => {
   const navItems = ['About', 'Portfolio', 'Stack', 'Contact'];
 
+  const handleResumeDownload = () => {
+    const link = document.createElement('a');
+    link.href = '/Resume/Resume.pdf';
+    link.download = 'Pujan_Mestry_Resume.pdf'; 
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <motion.header 
       initial={{ y: -100, opacity: 0 }}
@@ -30,6 +39,7 @@ const Header: React.FC = () => {
         <div className="h-4 w-px bg-border mx-1" />
         <AnimatedThemeToggler />
         <motion.button 
+          onClick={handleResumeDownload}
           whileHover={{ scale: 1.05, color: '#10b981' }}
           whileTap={{ scale: 0.95 }}
           className="text-[10px] md:text-[11px] font-black tracking-[0.2em] uppercase text-emerald-500 transition-all px-2"
